@@ -126,7 +126,7 @@ function ProductList() {
             onClick={() => {
               if (quantity[row.id - 1].qty < 1)
                 showAlert(
-                  "Product quantity should be greater than 1",
+                  "Product quantity should be greater than 0",
                   "alert-danger"
                 );
               else if (quantity[row.id - 1].qty > row.totalAvailableQuantity)

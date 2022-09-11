@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useCart } from "react-use-cart";
 
 const Cart = () => {
-  const { isEmpty, items, cartTotal, updateItem, removeItem, emptyCart } =
+  const { isEmpty, items, cartTotal, updateItem, removeItem } =
     useCart();
   const showAlert = (message, type) => {
     document.getElementById("alert").classList.add(type);
@@ -99,11 +99,6 @@ const Cart = () => {
     },
   ];
 
-  const handleCheckout = (event) => {
-    emptyCart();
-    console.log(event.currentTarget);
-  };
-
   return (
     <>
       <div
@@ -140,7 +135,6 @@ const Cart = () => {
           {!isEmpty && (
             <Link
               className="btn btn-primary pt-2 pb-2"
-              onClick={() => handleCheckout()}
               to="/thankyou"
               style={{ height: "50px", borderRadius: "25px", width: "300px" }}
             >
