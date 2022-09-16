@@ -191,7 +191,7 @@ function ProductList() {
 
   useEffect(() => {
     let resl;
-    if (search && !categoryFilter && !sizeFilter) {
+    if (search) {
       resl = products.filter((product) => {
         return (
           product.name.toLowerCase().match(search.toLowerCase()) ||
@@ -201,58 +201,63 @@ function ProductList() {
             .match(search.replace(/-/g, "").toLowerCase())
         );
       });
-    } else if (search && categoryFilter) {
-      resl = products.filter((product) => {
-        return sizeFilter
-          ? product.size.toLowerCase() === sizeFilter.toLowerCase() &&
-              product.category.toLowerCase() === categoryFilter.toLowerCase() &&
-              (product.name.toLowerCase().match(search.toLowerCase()) ||
-                product.name
-                  .replace(/-/g, "")
-                  .toLowerCase()
-                  .match(search.replace(/-/g, "").toLowerCase()))
-          : product.category.toLowerCase() === categoryFilter.toLowerCase() &&
-              (product.name.toLowerCase().match(search.toLowerCase()) ||
-                product.name
-                  .replace(/-/g, "")
-                  .toLowerCase()
-                  .match(search.replace(/-/g, "").toLowerCase()));
-      });
-    } else if (search && sizeFilter) {
-      resl = products.filter((product) => {
-        return categoryFilter
-          ? product.category.toLowerCase() === categoryFilter.toLowerCase() &&
-              product.size.toLowerCase() === sizeFilter.toLowerCase() &&
-              (product.name.toLowerCase().match(search.toLowerCase()) ||
-                product.name
-                  .replace(/-/g, "")
-                  .toLowerCase()
-                  .match(search.replace(/-/g, "").toLowerCase()))
-          : product.size.toLowerCase() === sizeFilter.toLowerCase() &&
-              (product.name.toLowerCase().match(search.toLowerCase()) ||
-                product.name
-                  .replace(/-/g, "")
-                  .toLowerCase()
-                  .match(search.replace(/-/g, "").toLowerCase()));
-      });
-    } else if (categoryFilter && !search) {
+
+      setFilteredProducts(resl);
+    }
+
+    if (categoryFilter) {
       resl = products.filter((product) => {
         return sizeFilter
           ? product.size.toLowerCase() === sizeFilter.toLowerCase() &&
               product.category.toLowerCase() === categoryFilter.toLowerCase()
           : product.category.toLowerCase() === categoryFilter.toLowerCase();
       });
-    } else if (sizeFilter && !search) {
+
+      setFilteredProducts(resl);
+
+      if (search) {
+        resl = filteredProducts.filter((product) => {
+          return (
+            product.name.toLowerCase().match(search.toLowerCase()) ||
+            product.name
+              .replace(/-/g, "")
+              .toLowerCase()
+              .match(search.replace(/-/g, "").toLowerCase())
+          );
+        });
+
+        setFilteredProducts(resl);
+      }
+    }
+    if (sizeFilter) {
       resl = products.filter((product) => {
         return categoryFilter
           ? product.category.toLowerCase() === categoryFilter.toLowerCase() &&
               product.size.toLowerCase() === sizeFilter.toLowerCase()
           : product.size.toLowerCase() === sizeFilter.toLowerCase();
       });
+
+      setFilteredProducts(resl);
+
+      if (search) {
+        resl = filteredProducts.filter((product) => {
+          return (
+            product.name.toLowerCase().match(search.toLowerCase()) ||
+            product.name
+              .replace(/-/g, "")
+              .toLowerCase()
+              .match(search.replace(/-/g, "").toLowerCase())
+          );
+        });
+
+        setFilteredProducts(resl);
+      }
     }
-    search || categoryFilter || sizeFilter
-      ? setFilteredProducts(resl)
-      : setFilteredProducts(productData);
+
+    !search &&
+      !categoryFilter &&
+      !sizeFilter &&
+      setFilteredProducts(productData);
     // eslint-disable-next-line
   }, [search, categoryFilter, sizeFilter]);
 
