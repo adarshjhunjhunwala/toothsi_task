@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 import { useCart } from "react-use-cart";
 
 const Cart = () => {
-  const { isEmpty, items, cartTotal, updateItem, removeItem } =
-    useCart();
+  const { isEmpty, items, cartTotal, updateItem, removeItem } = useCart();
   const showAlert = (message, type) => {
     document.getElementById("alert").classList.add(type);
     document.getElementById("alert").innerText = message;

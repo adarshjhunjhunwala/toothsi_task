@@ -190,42 +190,71 @@ function ProductList() {
   }, []);
 
   useEffect(() => {
-    const result = products.filter((product) => {
-      return (
-        product.name.toLowerCase().match(search.toLowerCase()) ||
-        product.name
-          .replace(/-/g, "")
-          .toLowerCase()
-          .match(search.replace(/-/g, "").toLowerCase())
-      );
-    });
-    search ? setFilteredProducts(result) : setFilteredProducts(productData);
-    // eslint-disable-next-line
-  }, [search]);
-
-  useEffect(() => {
-    const res = products.filter((product) => {
-      return sizeFilter
-        ? product.size.toLowerCase() === sizeFilter.toLowerCase() &&
-            product.category.toLowerCase() === categoryFilter.toLowerCase()
-        : product.category.toLowerCase() === categoryFilter.toLowerCase();
-    });
-    categoryFilter
-      ? setFilteredProducts(res)
+    let resl;
+    if (search && !categoryFilter && !sizeFilter) {
+      resl = products.filter((product) => {
+        return (
+          product.name.toLowerCase().match(search.toLowerCase()) ||
+          product.name
+            .replace(/-/g, "")
+            .toLowerCase()
+            .match(search.replace(/-/g, "").toLowerCase())
+        );
+      });
+    } else if (search && categoryFilter) {
+      resl = products.filter((product) => {
+        return sizeFilter
+          ? product.size.toLowerCase() === sizeFilter.toLowerCase() &&
+              product.category.toLowerCase() === categoryFilter.toLowerCase() &&
+              (product.name.toLowerCase().match(search.toLowerCase()) ||
+                product.name
+                  .replace(/-/g, "")
+                  .toLowerCase()
+                  .match(search.replace(/-/g, "").toLowerCase()))
+          : product.category.toLowerCase() === categoryFilter.toLowerCase() &&
+              (product.name.toLowerCase().match(search.toLowerCase()) ||
+                product.name
+                  .replace(/-/g, "")
+                  .toLowerCase()
+                  .match(search.replace(/-/g, "").toLowerCase()));
+      });
+    } else if (search && sizeFilter) {
+      resl = products.filter((product) => {
+        return categoryFilter
+          ? product.category.toLowerCase() === categoryFilter.toLowerCase() &&
+              product.size.toLowerCase() === sizeFilter.toLowerCase() &&
+              (product.name.toLowerCase().match(search.toLowerCase()) ||
+                product.name
+                  .replace(/-/g, "")
+                  .toLowerCase()
+                  .match(search.replace(/-/g, "").toLowerCase()))
+          : product.size.toLowerCase() === sizeFilter.toLowerCase() &&
+              (product.name.toLowerCase().match(search.toLowerCase()) ||
+                product.name
+                  .replace(/-/g, "")
+                  .toLowerCase()
+                  .match(search.replace(/-/g, "").toLowerCase()));
+      });
+    } else if (categoryFilter && !search) {
+      resl = products.filter((product) => {
+        return sizeFilter
+          ? product.size.toLowerCase() === sizeFilter.toLowerCase() &&
+              product.category.toLowerCase() === categoryFilter.toLowerCase()
+          : product.category.toLowerCase() === categoryFilter.toLowerCase();
+      });
+    } else if (sizeFilter && !search) {
+      resl = products.filter((product) => {
+        return categoryFilter
+          ? product.category.toLowerCase() === categoryFilter.toLowerCase() &&
+              product.size.toLowerCase() === sizeFilter.toLowerCase()
+          : product.size.toLowerCase() === sizeFilter.toLowerCase();
+      });
+    }
+    search || categoryFilter || sizeFilter
+      ? setFilteredProducts(resl)
       : setFilteredProducts(productData);
     // eslint-disable-next-line
-  }, [categoryFilter]);
-
-  useEffect(() => {
-    const resl = products.filter((product) => {
-      return categoryFilter
-        ? product.category.toLowerCase() === categoryFilter.toLowerCase() &&
-            product.size.toLowerCase() === sizeFilter.toLowerCase()
-        : product.size.toLowerCase() === sizeFilter.toLowerCase();
-    });
-    sizeFilter ? setFilteredProducts(resl) : setFilteredProducts(productData);
-    // eslint-disable-next-line
-  }, [sizeFilter]);
+  }, [search, categoryFilter, sizeFilter]);
 
   return (
     <div className="container mt-2">
